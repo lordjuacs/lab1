@@ -2,9 +2,9 @@
 
 #include <iostream>
 
+#include "BasicSpatial.hpp"
 #include "Point.h"
 #include "Validator.h"
-#include "BasicSpatial.hpp"
 
 using namespace utec::spatial;
 
@@ -42,7 +42,7 @@ TEST(SimpleTest, basicTest) {
 
   auto reference_result = validator.nearest_neighbor(point_t({50, 50}));
   auto result = instancia.nearest_neighbor(point_t({50, 50}));
-  
+
   EXPECT_EQ(reference_result, result);
 }
 
