@@ -35,6 +35,9 @@ class BasicSpatial : public SpatialBase<Point> {
     }
     // devolvemos el primer punto, pues es el mas cercano
     return dis_point.begin()->second;
+
+    // se opto por esta implementacion pues es muy simple de alterar para cuando
+    // se piden devolver K neighbors (solo es offset desde begin)
   }
 };
 
