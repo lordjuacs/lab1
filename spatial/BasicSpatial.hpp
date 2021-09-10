@@ -41,7 +41,7 @@ class BasicSpatial : public SpatialBase<Point> {
     // se piden devolver K neighbors (solo es offset desde begin)
     */
 
-    // se haya el punto con la menor distancia a la referencia respecto a una
+    // se halla el punto con la menor distancia a la referencia respecto a una
     // variable que mantiene la minima (la cual empieza siendo el primer
     // elemento del vector)
     distance_t min_dis = this->coordinates[0].distance(reference);
