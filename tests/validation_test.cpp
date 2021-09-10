@@ -39,9 +39,14 @@ TEST(SimpleTest, basicTest) {
     validator.insert(p);
     instancia.insert(p);
   }
-
-  auto reference_result = validator.nearest_neighbor(point_t({50, 50}));
-  auto result = instancia.nearest_neighbor(point_t({50, 50}));
+  // 50,50
+  auto px = genRandomNumber<int>(min, max);
+  auto py = genRandomNumber<int>(min, max);
+  auto reference_result = validator.nearest_neighbor(point_t({px, py}));
+  std::cout << "boost: " << reference_result.get(0) << ","
+            << reference_result.get(1) << "\n";
+  auto result = instancia.nearest_neighbor(point_t({px, py}));
+  std::cout << "mine: " << result.get(0) << "," << result.get(1) << "\n";
 
   EXPECT_EQ(reference_result, result);
 }
