@@ -6,13 +6,13 @@ namespace utec {
 namespace spatial {
 
 /**
- * RangeBST implementation
+ * RangeTree1D implementation
  */
 template <typename Point>
-class RangeBST : public SpatialBase<Point> {
+class RangeTree1D : public SpatialBase<Point> {
  private:
  public:
-  RangeBST(){};
+  RangeTree1D(){};
   void insert(const Point& new_point) override {}
 
   // El punto de referencia no necesariamente es parte del dataset
