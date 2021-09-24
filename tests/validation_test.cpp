@@ -6,45 +6,35 @@
 #include "Point.h"
 #include "Validator.h"
 #include "utils/DataGenerator.hpp"
-#include <fstream>
 
 using namespace utec::spatial;
 
 TEST(SimpleTest, basicTest) {
-  using data_t = int;
-  using point_t = Point<data_t, 2>;
-
-
-  Validator<point_t> validator;
-  BasicSpatial<point_t> instancia;
+  using data_t = double;
+  using point_t = Point<data_t, 1>;
 
   const std::size_t num_points = 10000;
-  const std::size_t min = 0, max = 1000;
+  const data_t min = 0, max = 1000;
 
-  DataGenerator generator(num_points, min, max);
+  DataGenerator1D<data_t> generator(num_points, min, max);
   auto points = generator.get_data();
 
+  point_t query_min = point_t({max * 0.2});
+  point_t query_max = point_t({max * 0.8});
+
+  BasicSpatial<point_t> instancia;
+  Validator<point_t> validator;
+
   for (auto& p : points) {
-    validator.insert(p);
     instancia.insert(p);
+    validator.insert(p);
   }
 
-  std::ofstream dataset;
-  dataset.open("dataset.txt");
-  generator.print(dataset);
-  dataset.close();
+  auto reference_result = validator.range(query_min, query_max);
+  auto result = instancia.range(query_min, query_max);
 
-  auto reference_result = validator.nearest_neighbor(point_t({50, 50}));
-  auto result = instancia.nearest_neighbor(point_t({50, 50}));
-
-  std::ofstream output;
-  output.open("output.txt");
-  output<<50<<" "<<50<<" "<<0<<"\n";
-  output<<reference_result.get(0)<<" "<<reference_result.get(1)<<" 1"<<"\n";
-  output<<result.get(0)<<" "<<result.get(1)<<" 2"<<"\n";
-  output.close();
-
-  EXPECT_EQ(reference_result, result);
+  std::cout << reference_result.size() << "\n";
+  EXPECT_EQ(reference_result.size(), result.size());
 }
 
 int main(int argc, char** argv) {
