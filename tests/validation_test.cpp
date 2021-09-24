@@ -33,8 +33,11 @@ TEST(SimpleTest, basicTest) {
   auto reference_result = validator.range(query_min, query_max);
   auto result = instancia.range(query_min, query_max);
 
-  std::cout << reference_result.size() << "\n";
   EXPECT_EQ(reference_result.size(), result.size());
+
+  std::sort(result.begin(), result.end());
+  std::sort(reference_result.begin(), reference_result.end());
+  EXPECT_EQ(reference_result, result);
 }
 
 int main(int argc, char** argv) {
