@@ -35,7 +35,7 @@ class RangeTree1D : public SpatialBase<Point> {
   void displayPreOrder(NodeAVL<Point> *node) {
     if (node == nullptr) return;
     displayPreOrder(node->left);
-    std::cout << node.get(0) << "\n";
+    std::cout << node->key.get(0) << "\n";
     displayPreOrder(node->right);
   }
 
@@ -194,6 +194,28 @@ class RangeTree1D : public SpatialBase<Point> {
     parent = temp;
   }
 
+  NodeAVL<Point> *menorAncestroComun(const Point &min, const Point &max) {
+    NodeAVL<Point> *v = this->root;
+    while (v->left && v->right &&
+           (max.get(0) <= v->key.get(0) || min.get(0) > v->key.get(0))) {
+      if (max.get(0) <= v->key.get(0)) {
+        v = v->left;
+      } else {
+        v = v->right;
+      }
+    }
+    return v;
+  }
+
+  void reportSubTree(NodeAVL<Point> *&node, std::vector<Point> &points) {
+    if (!node->left && !node->right) {
+      points.push_back(node->key);
+      return;
+    }
+    reportSubTree(node->left, points);
+    reportSubTree(node->right, points);
+  }
+
  public:
   RangeTree1D() : root(nullptr) {}
 
@@ -207,7 +229,39 @@ class RangeTree1D : public SpatialBase<Point> {
 
   // TODO
   std::vector<Point> range(const Point &min, const Point &max) override {
-    return {};
+    std::vector<Point> points;
+    NodeAVL<Point> *v_split = menorAncestroComun(min, max);
+    if (!v_split->left && !v_split->right) {
+      if (v_split->key.get(0) >= min.get(0) && v_split->key.get(0) <= max.get(0)  ) {
+        points.push_back(v_split->key);
+      }
+    } else {
+      NodeAVL<Point> *v = v_split->left;
+      while (v->left && v->right) {
+        if (min.get(0) <= v->key.get(0)) {
+          reportSubTree(v->right, points);
+          v = v->left;
+        } else {
+          v = v->right;
+        }
+      }
+      if (v->key.get(0) >= min.get(0) && v->key.get(0) <= max.get(0)) {
+        points.push_back(v->key);
+      }
+      v = v_split->right;
+      while (v->left && v->right) {
+        if (max.get(0) >= v->key.get(0)) {
+          reportSubTree(v->left, points);
+          v = v->right;
+        } else {
+          v = v->left;
+        }
+      }
+      if (v->key.get(0) >= min.get(0) && v->key.get(0) <= max.get(0)) {
+        points.push_back(v->key);
+      }
+    }
+    return points;
   };
 
   bool find(Point key) { return find(this->root, key); }
