@@ -196,7 +196,7 @@ class RangeTree1D : public SpatialBase<Point> {
 
   NodeAVL<Point> *menorAncestroComun(const Point &min, const Point &max) {
     NodeAVL<Point> *v = this->root;
-    while (v->left && v->right &&
+    while ((v->left || v->right) &&
            (max.get(0) <= v->key.get(0) || min.get(0) > v->key.get(0))) {
       if (max.get(0) <= v->key.get(0)) {
         v = v->left;
@@ -237,7 +237,7 @@ class RangeTree1D : public SpatialBase<Point> {
       }
     } else {
       NodeAVL<Point> *v = v_split->left;
-      while (v->left && v->right) {
+      while (v->left || v->right) {
         if (min.get(0) <= v->key.get(0)) {
           reportSubTree(v->right, points);
           v = v->left;
@@ -249,7 +249,7 @@ class RangeTree1D : public SpatialBase<Point> {
         points.push_back(v->key);
       }
       v = v_split->right;
-      while (v->left && v->right) {
+      while (v->left || v->right) {
         if (max.get(0) >= v->key.get(0)) {
           reportSubTree(v->left, points);
           v = v->right;
